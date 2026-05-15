@@ -1,0 +1,12 @@
+id: 31f60169-0eab-42a9-960e-57913e2d9700
+name: Path Traversal / LFI
+function: VIEW_FILTER
+location: PROXY_HTTP_HISTORY
+source: "// Path Traversal & LFI\r\nif (!requestResponse.hasResponse()) return false;\r\
+  \n\r\nString query = requestResponse.finalRequest().query() != null ? requestResponse.finalRequest().query().toLowerCase()\
+  \ : \"\";\r\nString path = requestResponse.finalRequest().path().toLowerCase();\r\
+  \n\r\nString[] traversalParams = {\"file=\", \"path=\", \"load=\", \"page=\", \"\
+  document=\", \"download=\", \"read=\"};\r\nfor (String p : traversalParams) {\r\n\
+  \    if (query.contains(p) || path.contains(p)) return true;\r\n}\r\nif (query.contains(\"\
+  ../\") || path.contains(\"../\") ||\r\n    query.contains(\"%2e%2e%2f\") || query.contains(\"\
+  ..%2f\")) return true;\r\nreturn false;"

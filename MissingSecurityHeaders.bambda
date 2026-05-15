@@ -1,0 +1,10 @@
+id: 53855253-f6ee-41c6-8618-2da253bd6feb
+name: Missing Security Headers
+function: VIEW_FILTER
+location: PROXY_HTTP_HISTORY
+source: "// Missing Security Headers\r\nif (!requestResponse.hasResponse()) return\
+  \ false;\r\n\r\nHttpResponse res = requestResponse.response();\r\nif (res.headerValue(\"\
+  Strict-Transport-Security\") == null ||\r\n    res.headerValue(\"Content-Security-Policy\"\
+  ) == null ||\r\n    res.headerValue(\"X-Frame-Options\") == null ||\r\n    res.headerValue(\"\
+  X-XSS-Protection\") == null ||\r\n    res.headerValue(\"X-Content-Type-Options\"\
+  ) == null) return true;\r\nreturn false;"

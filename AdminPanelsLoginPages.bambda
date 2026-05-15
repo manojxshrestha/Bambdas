@@ -1,0 +1,10 @@
+id: 3b9cfcbe-df9c-4b4b-9137-b2889988f7bd
+name: Admin Panels & Login Pages
+function: VIEW_FILTER
+location: PROXY_HTTP_HISTORY
+source: "// Admin Panels & Login\r\nif (!requestResponse.hasResponse()) return false;\r\
+  \n\r\nString path = requestResponse.finalRequest().path().toLowerCase();\r\n\r\n\
+  String[] adminPaths = {\"/admin\", \"/login\", \"/wp-admin\", \"/dashboard\", \"\
+  /cpanel\", \"/administrator\", \"/panel\", \"/manage\"};\r\nfor (String a : adminPaths)\
+  \ {\r\n    if (path.equals(a) || path.startsWith(a + \"/\") || path.startsWith(a\
+  \ + \"?\")) return true;\r\n}\r\nreturn false;"

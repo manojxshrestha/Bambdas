@@ -1,0 +1,14 @@
+id: 32526ca5-ecbf-4426-a1fd-326c1de73937
+name: SQLi
+function: VIEW_FILTER
+location: PROXY_HTTP_HISTORY
+source: "// SQLi Indicators\r\nif (!requestResponse.hasResponse()) return false;\r\
+  \n\r\nString query = requestResponse.finalRequest().query() != null ? requestResponse.finalRequest().query().toLowerCase()\
+  \ : \"\";\r\nString body = requestResponse.finalRequest().bodyToString().toLowerCase();\r\
+  \nString resBody = requestResponse.response().bodyToString().toLowerCase();\r\n\r\
+  \nString[] sqlPatterns = {\"%27\", \"%22\", \"or 1=1\", \"sleep(\", \"benchmark(\"\
+  , \"union select\", \"waitfor delay\"};\r\nfor (String p : sqlPatterns) {\r\n  \
+  \  if (query.contains(p) || body.contains(p)) return true;\r\n}\r\nString[] sqlErrors\
+  \ = {\"sql syntax\", \"mysql_fetch\", \"ora-01756\", \"unclosed quotation mark\"\
+  , \"pg_query\"};\r\nfor (String e : sqlErrors) {\r\n    if (resBody.contains(e))\
+  \ return true;\r\n}\r\nreturn false;"

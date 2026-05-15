@@ -1,0 +1,15 @@
+id: 4584aac0-61d8-4fc7-b4ea-06ce52078972
+name: IDOR
+function: VIEW_FILTER
+location: PROXY_HTTP_HISTORY
+source: "// IDOR Finder\r\nif (!requestResponse.hasResponse()) return false;\r\n\r\
+  \nString url = requestResponse.finalRequest().url().toString().toLowerCase();\r\n\
+  // Optional: scope filter – uncomment and edit\r\n// if (!url.contains(\"humo.be\"\
+  )) return false;\r\n\r\nString query = requestResponse.finalRequest().query() !=\
+  \ null ? requestResponse.finalRequest().query().toLowerCase() : \"\";\r\nString\
+  \ path = requestResponse.finalRequest().path().toLowerCase();\r\n\r\nString[] idorParams\
+  \ = {\"id=\", \"user_id=\", \"uid=\", \"doc_id=\", \"account_id=\", \"profile_id=\"\
+  , \"order_id=\", \"invoice=\"};\r\nfor (String p : idorParams) {\r\n    if (query.contains(p)\
+  \ || path.contains(p)) return true;\r\n}\r\n// REST-style numeric IDs in path: /users/1234\r\
+  \nif (path.matches(\".*/[a-z]+/\\\\d{1,10}(/.*)?\")) return true;\r\n\r\nreturn\
+  \ false;"

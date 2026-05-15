@@ -1,0 +1,12 @@
+id: 4a6e6caa-2358-4044-b401-38592bffe522
+name: Cacheable Responses (Cache Poisoning)
+function: VIEW_FILTER
+location: PROXY_HTTP_HISTORY
+source: "// Cacheable Responses\r\nif (!requestResponse.hasResponse()) return false;\r\
+  \n\r\nHttpResponse res = requestResponse.response();\r\nString cacheControl = res.headerValue(\"\
+  Cache-Control\");\r\nString xCache = res.headerValue(\"X-Cache\");\r\nString cfCache\
+  \ = res.headerValue(\"CF-Cache-Status\");\r\n\r\nif (cacheControl != null && cacheControl.toLowerCase().contains(\"\
+  public\") && !cacheControl.toLowerCase().contains(\"no-store\")) return true;\r\n\
+  if (xCache != null && (xCache.toLowerCase().contains(\"hit\") || xCache.toLowerCase().contains(\"\
+  miss\"))) return true;\r\nif (cfCache != null && (cfCache.toLowerCase().contains(\"\
+  hit\") || cfCache.toLowerCase().contains(\"miss\"))) return true;\r\nreturn false;"

@@ -1,0 +1,28 @@
+id: aa45ef3e-7a3d-4454-831b-13131a80d75b
+name: SSRF & Open Redirect
+function: VIEW_FILTER
+location: PROXY_HTTP_HISTORY
+source: "// SSRF + Open Redirect\r\nif (!requestResponse.hasResponse()) return false;\r\
+  \n\r\nHttpResponse response = requestResponse.response();\r\n// Check for 3xx redirects\r\
+  \nif (response.isStatusCodeClass(StatusCodeClass.CLASS_3XX_REDIRECTION)) {\r\n \
+  \   var parameters = requestResponse.request().parameters();\r\n    for (var param\
+  \ : parameters) {\r\n        // Only check URL parameters (not body parameters)\r\
+  \n        if (param.type() != HttpParameterType.URL) continue;\r\n        \r\n \
+  \       String decodedValue = utilities.urlUtils().decode(param.value()).toLowerCase();\r\
+  \n        // Look for potential redirect targets\r\n        if (decodedValue.startsWith(\"\
+  http\") || decodedValue.startsWith(\"https\") || decodedValue.startsWith(\"//\"\
+  )) {\r\n            String location = response.headerValue(\"Location\");\r\n  \
+  \          if (location != null && location.toLowerCase().startsWith(decodedValue))\
+  \ {\r\n                return true;  // Confirmed open redirect\r\n            }\r\
+  \n        }\r\n    }\r\n}\r\n\r\n// SSRF evidence in response body\r\nString resBody\
+  \ = response.bodyToString().toLowerCase();\r\nif (resBody.contains(\"169.254.169.254\"\
+  ) ||\r\n    resBody.contains(\"metadata.google.internal\") ||\r\n    resBody.contains(\"\
+  instance/metadata\") ||\r\n    resBody.contains(\"169.254.169.254/latest\") ||\r\
+  \n    resBody.contains(\"100.100.100.200\")) {  // Alibaba metadata\r\n    return\
+  \ true;\r\n}\r\n\r\n// Also flag suspicious request parameters that contain internal\
+  \ IPs or metadata endpoints\r\nString query = requestResponse.request().query()\
+  \ != null ? requestResponse.request().query().toLowerCase() : \"\";\r\nString body\
+  \ = requestResponse.request().bodyToString().toLowerCase();\r\nif (query.contains(\"\
+  169.254.169.254\") || body.contains(\"169.254.169.254\") ||\r\n    query.contains(\"\
+  metadata.google\") || body.contains(\"metadata.google\")) {\r\n    return true;\r\
+  \n}\r\n\r\nreturn false;"

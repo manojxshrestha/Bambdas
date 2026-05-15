@@ -1,0 +1,9 @@
+id: b9bfd32a-7f36-4b05-8aaf-4118495ebc45
+name: GraphQL Endpoints
+function: VIEW_FILTER
+location: PROXY_HTTP_HISTORY
+source: "// GraphQL\r\nif (!requestResponse.hasResponse()) return false;\r\n\r\nString\
+  \ path = requestResponse.finalRequest().path().toLowerCase();\r\nString body = requestResponse.finalRequest().bodyToString().toLowerCase();\r\
+  \n\r\nif (path.contains(\"/graphql\") || path.contains(\"/gql\") || path.contains(\"\
+  /query\")) return true;\r\nif (body.contains(\"\\\"query\\\"\") && body.contains(\"\
+  {\") && body.contains(\"}\")) return true;\r\nreturn false;"

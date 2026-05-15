@@ -1,0 +1,12 @@
+id: 0bb4e1eb-91ab-42c6-abff-be4f8519d5cb
+name: Debug & Development Endpoints
+function: VIEW_FILTER
+location: PROXY_HTTP_HISTORY
+source: "// Debug/Dev Endpoints\r\nif (!requestResponse.hasResponse()) return false;\r\
+  \n\r\nString path = requestResponse.finalRequest().path().toLowerCase();\r\nString\
+  \ resBody = requestResponse.response().bodyToString().toLowerCase();\r\n\r\nString[]\
+  \ debugPaths = {\"/debug\", \"/test\", \"/staging\", \"/dev\", \"/phpinfo\", \"\
+  /actuator\", \"/swagger\", \"/.env\", \"/.git\", \"/backup\"};\r\nfor (String d\
+  \ : debugPaths) {\r\n    if (path.contains(d)) return true;\r\n}\r\nif (resBody.contains(\"\
+  phpinfo()\") || resBody.contains(\"stack trace\") || resBody.contains(\"debug mode\"\
+  )) return true;\r\nreturn false;"

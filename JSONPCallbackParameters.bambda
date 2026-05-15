@@ -1,0 +1,12 @@
+id: 44c7cfea-74d7-46e4-9bb7-5d9c9935cbe9
+name: JSONP & Callback Parameters
+function: VIEW_FILTER
+location: PROXY_HTTP_HISTORY
+source: "// JSONP / Callbacks\r\nif (!requestResponse.hasResponse()) return false;\r\
+  \n\r\nString query = requestResponse.finalRequest().query() != null ? requestResponse.finalRequest().query().toLowerCase()\
+  \ : \"\";\r\nString path = requestResponse.finalRequest().path().toLowerCase();\r\
+  \nString resBody = requestResponse.response().bodyToString().toLowerCase();\r\n\r\
+  \nif (query.contains(\"callback=\") || query.contains(\"jsonp=\") || path.contains(\"\
+  callback\")) {\r\n    // Check if response looks like JSONP: starts with functionName(\r\
+  \n    if (resBody.trim().matches(\"^[a-zA-Z0-9_]+\\\\s*\\\\(.*\")) return true;\r\
+  \n    return true; // even without confirmation, flag it\r\n}\r\nreturn false;"

@@ -1,0 +1,13 @@
+id: 59db2b67-b4c4-4d13-b7be-456d14726484
+name: XSS
+function: VIEW_FILTER
+location: PROXY_HTTP_HISTORY
+source: "// XSS Finder\r\nif (!requestResponse.hasResponse()) return false;\r\n\r\n\
+  String query = requestResponse.finalRequest().query() != null ? requestResponse.finalRequest().query().toLowerCase()\
+  \ : \"\";\r\nString body = requestResponse.finalRequest().bodyToString().toLowerCase();\r\
+  \nString resBody = requestResponse.response().bodyToString().toLowerCase();\r\n\r\
+  \nString[] xssPatterns = {\"<script\", \"alert(\", \"onerror=\", \"javascript:\"\
+  , \"<img src=x\", \"prompt(\", \"onload=\"};\r\nfor (String p : xssPatterns) {\r\
+  \n    if (query.contains(p) || body.contains(p)) return true;\r\n}\r\n// Reflected\
+  \ XSS\r\nfor (String p : xssPatterns) {\r\n    if ((query.contains(p) || body.contains(p))\
+  \ && resBody.contains(p)) return true;\r\n}\r\nreturn false;"
